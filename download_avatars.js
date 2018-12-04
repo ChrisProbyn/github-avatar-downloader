@@ -1,6 +1,7 @@
 var request = require('request');
 var fs = require('fs');
 var secret = require('./secrets');
+var args = process.argv.slice(2);
 
 function getRepoContributors(repoOwner, repoName, callback) {
   var options = {
@@ -22,7 +23,7 @@ function downloadImageByURL(url, filepath){
   .pipe(fs.createWriteStream("avatars/" + filepath + ".jpg"));
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+getRepoContributors(args[0], args[1], function(err, result) {
   for(var i of result){
      downloadImageByURL((i.avatar_url), i.login)
     }
