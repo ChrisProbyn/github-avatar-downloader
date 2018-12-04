@@ -10,31 +10,20 @@ function getRepoContributors(repoOwner, repoName, callback) {
       'Authorization': 'token ' + secret.GITHUB_TOKEN
     },
   };
-
-// request.get(options.url)
-//        .on('response', function (response) {
-//         var data = JSON.parse(response).headers["avatar_url"]
-
-//        });
-
-
   request(options, function(err, res, body) {
-
-
     var resulting = JSON.parse(body);
-    var list = [];
-    for(var i of resulting){
-     list.push(i.avatar_url);
-    }
-
-
-
-    callback(err,list);
+    callback(err,resulting);
   });
 }
 
 
+function downloadImageByURL(url, filepath){
+  request.get(url)
+  .pipe(fs.createWriteStream("avatars/" + filepath + ".jpg"));
+}
+
 getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", result);
+  for(var i of result){
+     downloadImageByURL((i.avatar_url), i.login)
+    }
 });
